@@ -167,8 +167,13 @@ int main()
 
                         // Tra lai ket qua cho client
                         FILE *f = fopen("out.txt", "rb");
-                        
-
+                        while(1){
+                            int n = fread(buf, 1, sizeof(buf), f);
+                            if(n <= 0)
+                                break;
+                            send(client, buf, n, 0);
+                        }
+                        fclose(f);
                     }
                 }
             }

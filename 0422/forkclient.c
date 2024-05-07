@@ -25,6 +25,7 @@ int main()
 
     if (fork() == 0)
     {
+        // Doc chuoi ky tu tu ban phim va gui cho server
         char buf[1024];
         while (1)
         {
@@ -38,6 +39,7 @@ int main()
     }
     else
     {
+        // Nhan chuoi ky tu tu server, in ra man hinh
         char buf[1024];
         while (1)
         {
@@ -53,8 +55,6 @@ int main()
     }
     
     killpg(0, SIGKILL);
-
-    close(client);
 
     return 0;
 }

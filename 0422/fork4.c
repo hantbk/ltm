@@ -7,7 +7,7 @@
 void signalHandler(int signal)
 {
     int pid = wait(NULL);
-    printf("Child process %d done\n", pid);
+    printf("Child process terminated, pid = %d\n", pid);
 }
 
 int main()
@@ -18,10 +18,10 @@ int main()
 
     if (pid1 == 0)
     {
-        printf("Child process 1 start, pid = %d\n", getpid());
+        printf("Child process start, pid = %d\n", getpid());
 
         sleep(10);
-        printf("Child process 1 running\n");
+        printf("Child process done, pid = %d\n", getpid());
 
         exit(0);
     }
