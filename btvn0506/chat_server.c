@@ -46,7 +46,8 @@ int main()
 
     while (1)
     {
-        if(numClients < 2) {
+        if (numClients < 2)
+        {
             printf("Waiting for new client\n");
             int client = accept(listener, NULL, NULL);
             printf("New client accepted, client = %d\n", client);
@@ -67,6 +68,7 @@ void *client_proc(void *arg)
 {
     int client = *(int *)arg;
     char buf[256];
+    char msg[512];
 
     // Nhan du lieu tu client
     while (1)
@@ -74,10 +76,13 @@ void *client_proc(void *arg)
         if (numClients == 2)
         {
             int ret = recv(client, buf, sizeof(buf), 0);
-            if (ret <= 0){
+            if (ret <= 0)
+            {
                 numClients = 0;
-                for(int i = 1; i <= numClients; i++) {
-                    if(clients[i] != client) {
+                for (int i = 1; i <= 2; i++)
+                {
+                    if (clients[i] != client)
+                    {
                         send(clients[i], "Client disconnected", 19, 0);
                         pthread_cancel(threadID[i]);
                     }
@@ -87,13 +92,17 @@ void *client_proc(void *arg)
             }
 
             buf[ret] = 0;
+
+            sprintf(msg, "Received from client %d: %s\n", client, buf);
             printf("Received from %d: %s\n", client, buf);
-            for(int i = 1; i <= numClients; i++) {
-                if(clients[i] != client) {
-                    send(clients[i], buf, ret, 0);
+
+            for (int i = 1; i <= numClients; i++)
+            {
+                if (clients[i] != client)
+                {
+                    send(clients[i], msg, strlen(msg), 0);
                 }
             }
-
         }
     }
 
