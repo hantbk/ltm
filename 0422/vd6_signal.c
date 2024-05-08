@@ -14,9 +14,9 @@ int main()
 {
     signal(SIGCHLD, signalHandler);
 
-    pid_t pid1 = fork();
+    pid_t pid = fork();
 
-    if (pid1 == 0)
+    if (pid == 0)
     {
         printf("Child process start, pid = %d\n", getpid());
 

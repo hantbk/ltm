@@ -23,7 +23,7 @@ int main()
         return 1;
     }
 
-    if (fork() == 0)
+    if (fork() == 0) // Process con
     {
         // Doc chuoi ky tu tu ban phim va gui cho server
         char buf[1024];
@@ -46,15 +46,16 @@ int main()
             int ret = recv(client, buf, sizeof(buf), 0);
             if (ret <= 0)
             {
-                close(client);
-                continue;
+                break;
             }
             buf[ret] = '\0';
             printf("Received: %s\n", buf);
         }
     }
     
-    killpg(0, SIGKILL);
+    // Dong ket noi
+    close(client);
+    killpg(0, SIGKILL); // Kill tat ca cac process con cua process hien tai
 
     return 0;
 }

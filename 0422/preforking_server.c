@@ -68,7 +68,6 @@ int main()
 
                 close(client);
             }
-            
             exit(0);
         }
     }
