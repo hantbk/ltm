@@ -7,7 +7,6 @@
 
 int main()
 {
-
     // Tao socket cho ket noi
     int listener = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (listener == -1)
@@ -42,20 +41,23 @@ int main()
     int clientAddrLen = sizeof(clientAddr);
 
     int client = accept(listener, (struct sockaddr *)&clientAddr, &clientAddrLen);
-    printf("Client moi ket noi: %d - IP: %s - Port: %d\n", client, inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port));
+    printf("Client moi ket noi: %d - IP: %s - Port: %d\n", client, inet_ntoa(clientAddr.sin_addr),
+           ntohs(clientAddr.sin_port));
 
     // char msg[] = "Hello client\n";
     // int ret = send(client, msg, strlen(msg), 0);
     // printf("%d bytes da duoc gui\n", ret);
 
     // char buf[256];
-    // for(int i =0; i < 10; i++)
+    // for (int i = 0; i < 10; i++)
     //     buf[i] = i + 97;
     // int ret = send(client, buf, 10, 0);
     // printf("%d bytes da duoc gui\n", ret);
 
     // float f = 3.14;
-    // int ret = send(client, &f, sizeof(f), 0);
+    // char buf2[16];
+    // sprintf(buf2, "%f\n", f);
+    // int ret = send(client, buf2, sizeof(f), 0);
     // printf("%d bytes da duoc gui\n", ret);
 
     char buf[16];

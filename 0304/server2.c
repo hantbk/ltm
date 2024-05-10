@@ -6,7 +6,8 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-int main() {
+int main()
+{
 
     // Tao socket cho ket noi
     int listener = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -45,7 +46,7 @@ int main() {
     {
         int client = accept(listener, (struct sockaddr *)&clientAddr, &clientAddrLen);
         printf("Client moi ket noi:%d - IP: %s - Port: %d\n",
-        client, inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port));
+               client, inet_ntoa(clientAddr.sin_addr), ntohs(clientAddr.sin_port));
 
         char buf[256];
         int ret = recv(client, buf, sizeof(buf), 0);
@@ -61,7 +62,7 @@ int main() {
         send(client, buf, strlen(buf), 0);
         close(client);
     }
-    
+
     close(listener);
 
     return 0;

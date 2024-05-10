@@ -6,12 +6,6 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-struct diemthi
-{
-    int diem_qt;
-    int diem_ck;
-};
-
 int main()
 {
 
@@ -43,31 +37,28 @@ int main()
         return 1;
     }
 
-    int n;
-    struct diemthi dt;
-
-    int client = accept(listener, NULL, NULL);
+    char buf[1024];
 
     while (1)
     {
-        // int ret = recv(client, &n, sizeof(n), 0);
-        // if(ret <= 0) {
-        //     break;
-        // }
-
-        // printf("%d bytes: %d\n", ret, n);
-
-        int ret = recv(client, &dt, sizeof(dt), 0);
+        int client = accept(listener, NULL, NULL);
+        int ret = recv(client, buf, sizeof(buf), 0);
         if (ret <= 0)
         {
-            break;
+            close(client);
+            continue;
         }
+        if (ret < sizeof(buf))
+        {
+            buf[ret] = 0;
+            printf("%s\n", buf);
 
-        printf("%d bytes: %d - %d\n", ret, dt.diem_qt, dt.diem_ck);
+            char msg[] = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<html><body><h1>Hello World</h1></body></html>";
+            send(client, msg, strlen(msg), 0);
+
+            close(client);
+        }
     }
-
-    close(client);
-    close(listener);
 
     return 0;
 }

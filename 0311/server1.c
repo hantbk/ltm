@@ -44,7 +44,8 @@ int main()
     while (1)
     {
         int ret = recv(client, buf, sizeof(buf), 0);
-        if(ret <= 0) {
+        if (ret <= 0)
+        {
             break;
         }
         if (ret < sizeof(buf))
@@ -53,7 +54,7 @@ int main()
         }
         puts(buf);
     }
-    
+
     close(client);
     close(listener);
 

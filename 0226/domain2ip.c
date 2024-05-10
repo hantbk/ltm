@@ -52,7 +52,7 @@
 int main()
 {
     struct addrinfo *res, *p;
-    int ret = getaddrinfo("gmail.com", "http", NULL, &res);
+    int ret = getaddrinfo("nukeviet.vn", "http", NULL, &res);
     if (ret != 0)
     {
         printf("Khong phan giai duoc\n");
@@ -73,7 +73,12 @@ int main()
         else if (p->ai_family == AF_INET6)
         {
             printf("IPv6\n");
+            char buf[64];
+            struct sockaddr_in6 addr6;
+            memcpy(&addr6, p->ai_addr, sizeof(addr6));
+            printf("IP: %s\n", inet_ntop(p->ai_family, &addr6.sin6_addr, buf, sizeof(buf)));
         }
         p = p->ai_next;
     }
+    freeaddrinfo(res);
 }

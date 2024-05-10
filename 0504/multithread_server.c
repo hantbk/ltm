@@ -5,10 +5,14 @@
 #include <sys/types.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <pthread.h>
+
+void *client_proc(void *);
+
+int clients[64];
 
 int main()
 {
-
     // Tao socket cho ket noi
     int listener = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (listener == -1)
@@ -37,28 +41,36 @@ int main()
         return 1;
     }
 
-    char buf[1024];
-
     while (1)
     {
+        printf("Waiting for new client\n");
         int client = accept(listener, NULL, NULL);
-        int ret = recv(client, buf, sizeof(buf), 0);
-        if(ret <= 0) {
-            close(client);
-            continue;
-        }
-        if (ret < sizeof(buf))
-        {
-            buf[ret] = 0;
-            printf("%s\n", buf);
+        printf("New client accepted, client = %d\n", client);
 
-            char msg[] = "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n<html><body><h1>Hello World</h1></body></html>";
-            send(client, msg, strlen(msg), 0);
-
-            close(client);
-        }
+        pthread_t tid;
+        pthread_create(&tid, NULL, client_proc, &client);
+        pthread_detach(tid);
     }
-    
 
     return 0;
+}
+
+void *client_proc(void *arg)
+{
+    int client = *(int *)arg;
+    char buf[256];
+
+    // Nhan du lieu tu client
+    while (1)
+    {
+        int ret = recv(client, buf, sizeof(buf), 0);
+        if (ret <= 0)
+        {
+            break;
+        }
+
+        buf[ret] = 0;
+        printf("Received from %d: %s\n", client, buf);
+    }
+    close(client);
 }

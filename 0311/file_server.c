@@ -37,6 +37,8 @@ int main()
         return 1;
     }
     int client = accept(listener, NULL, NULL);
+
+    // Nhan ten file
     int n;
     recv(client, &n, sizeof(n), 0);
     char filename[32];

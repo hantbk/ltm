@@ -26,6 +26,5 @@ int main(){
         printf("Sai cu phap\n");
     }
     
-
     return 0;
 }
