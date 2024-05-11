@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
         if (ret <= 0)
             break;
 
-                buf[ret] = 0;
+        buf[ret] = 0;
 
         memcpy(mssv, buf, 8);
         mssv[8] = 0;

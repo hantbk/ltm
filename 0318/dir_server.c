@@ -6,8 +6,13 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-int main(int argc, char *argv[])
+struct file_info
 {
+    char name[256];
+    long size;
+};
+
+int main(){
     // Tao socket cho ket noi
     int listener = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (listener == -1)
@@ -36,39 +41,29 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    char buf[256];
-
-    int mssv;
-    char hoten[64];
-    unsigned char ngay, thang;
-    unsigned short nam;
-    float diemtb;
-
-    while (1)
+    // Chap nhan ket noi
+    int client = accept(listener, NULL, NULL);
+    if (client == -1)
     {
-        int client = accept(listener, NULL, NULL);
-        int ret = recv(client, buf, sizeof(buf), 0);
-
-        int pos = 0;
-        memcpy(&mssv, buf, sizeof(mssv));
-        pos += sizeof(mssv);
-        ngay = buf[pos++];
-        thang = buf[pos++];
-        memcpy(&nam, buf + pos, sizeof(nam));
-        pos += sizeof(nam);
-        memcpy(&diemtb, buf + pos, sizeof(diemtb));
-        pos += sizeof(diemtb);
-
-        int len = ret - pos;
-        memcpy(hoten, buf + pos, len);
-        hoten[len] = 0;
-
-        printf("%d %s %d-%d-%d %.2f\n", mssv, hoten, nam, thang, ngay, diemtb);
-
-        close(client);
+        perror("accept() failed");
+        return 1;
     }
 
+    // Nhan thong tin file tu client
+    struct file_info file[100];
+    recv(client, file, sizeof(file), 0);
+
+    // In thong tin file
+    for (int i = 0; i < 100; i++)
+    {
+        if (file[i].size == 0)
+            break;
+        printf("%s - %ld bytes\n", file[i].name, file[i].size);
+    }
+
+    // Dong ket noi
+    close(client);
     close(listener);
 
-    return 1;
+    return 0;
 }

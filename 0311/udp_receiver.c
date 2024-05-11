@@ -7,7 +7,6 @@
 #include <unistd.h>
 
 int main() {
-
     int receiver = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
     struct sockaddr_in addr;
@@ -15,24 +14,18 @@ int main() {
     addr.sin_addr.s_addr = htonl(INADDR_ANY);
     addr.sin_port = htons(9000);
 
-    bind(receiver, (struct sockaddr*)&addr, sizeof(addr));
+    bind(receiver, (struct sockaddr *)&addr, sizeof(addr));
 
     char buf[16];
 
-    while (1)
-    {
-        int ret = recvfrom(receiver, buf, sizeof(buf),0, NULL, NULL);
-        if (ret == -1)
-        {
-            printf("recvfrom() failed\n");
-            break;
-        }
-        else
-        {
+    while (1) {
+        int ret = recvfrom(receiver, buf, sizeof(buf), 0,
+            NULL, NULL);
+        if (ret == -1) {
+            printf("Loi khi nhan du lieu");
+        } else {
             buf[ret] = 0;
-            printf("%d - %s\n", ret, buf);
+            puts(buf);
         }
     }
-    
-    return 0;
 }
