@@ -1,23 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <dirent.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <arpa/inet.h>
-#include <sys/stat.h>
 #include <unistd.h>
-#include <errno.h>
+#include <dirent.h>
+#include <sys/stat.h>
 
-struct file_info
+int main(int argc, char *argv[])
 {
-    char name[256];
-    long size;
-};
-
-int main()
-{
-
     int client = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
     struct sockaddr_in addr;
@@ -32,18 +24,17 @@ int main()
         return 1;
     }
 
+    char buf[2048];
+    int pos = 0;
+
     char path[256];
-    // printf("Enter path: ");
     getcwd(path, sizeof(path));
-    // fgets(path, sizeof(path), stdin);
-    // path[strlen(path) - 1] = '\0';
-    puts(path);
+    strcpy(buf, path);
+    pos += strlen(path) + 1;
+
     DIR *d = opendir(path);
     struct dirent *dir;
     struct stat st;
-
-    struct file_info file[100];
-    int i = 0;
 
     if (d != NULL)
         while ((dir = readdir(d)) != NULL)
@@ -53,13 +44,15 @@ int main()
                 stat(dir->d_name, &st);
                 printf("%s - %ld bytes\n", dir->d_name, st.st_size);
 
-                strcpy(file[i].name, dir->d_name);
-                file[i].size = st.st_size;
-                i++;
+                strcpy(buf + pos, dir->d_name);
+                pos += strlen(dir->d_name) + 1;
+                memcpy(buf + pos, &st.st_size, sizeof(st.st_size));
+                pos += sizeof(st.st_size);
             }
         }
 
-    send(client, file, sizeof(struct file_info) * i, 0);
+    // Gui sang server
+    send(client, buf, pos, 0);
 
     close(client);
 

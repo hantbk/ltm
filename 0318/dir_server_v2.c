@@ -6,13 +6,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-struct file_info
-{
-    char name[256];
-    long size;
-};
-
-int main()
+int main(int argc, char *argv[])
 {
     // Tao socket cho ket noi
     int listener = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -42,29 +36,37 @@ int main()
         return 1;
     }
 
-    // Chap nhan ket noi
-    int client = accept(listener, NULL, NULL);
-    if (client == -1)
+    char buf[2048];
+    int pos;
+    char path[256];
+    char filename[32];
+    long filesize;
+
+    while (1)
     {
-        perror("accept() failed");
-        return 1;
+        int client = accept(listener, NULL, NULL);
+        int ret = recv(client, buf, sizeof(buf), 0);
+
+        pos = 0;
+        strcpy(path, buf);
+        pos += strlen(path) + 1;
+
+        puts(path);
+
+        while (pos < ret)
+        {
+            strcpy(filename, buf + pos);
+            pos += strlen(filename) + 1;
+            memcpy(&filesize, buf + pos, sizeof(filesize));
+            pos += sizeof(filesize);
+
+            printf("%s - %ld bytes\n", filename, filesize);
+        }
+
+        close(client);
     }
 
-    // Nhan thong tin file tu client
-    struct file_info file[100];
-    recv(client, file, sizeof(file), 0);
-
-    // In thong tin file
-    for (int i = 0; i < 100; i++)
-    {
-        if (file[i].size == 0)
-            break;
-        printf("%s - %ld bytes\n", file[i].name, file[i].size);
-    }
-
-    // Dong ket noi
-    close(client);
     close(listener);
 
-    return 0;
+    return 1;
 }
