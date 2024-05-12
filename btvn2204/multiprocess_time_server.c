@@ -18,7 +18,6 @@ void signalHandler(int signo)
 
 int main()
 {
-
     // Tao socket cho ket noi
     int listener = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (listener == -1)
