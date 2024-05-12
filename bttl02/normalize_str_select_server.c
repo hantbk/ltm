@@ -8,6 +8,29 @@
 #include <sys/select.h>
 #include <ctype.h>
 
+int remove_client(int client, int *client_socket, char **name_clients, int *num_clients)
+{
+    // Xoa client khoi danh sach client da dang nhap
+    int i = 0;
+    for (; i < *num_clients; i++)
+    {
+        if (client_socket[i] == client)
+        {
+            break;
+        }
+    }
+    if (i < *num_clients)
+    {
+        if (i < num_clients - 1)
+        {
+            client_socket[i] = client_socket[*num_clients - 1];
+            strcpy(name_clients[i], name_clients[*num_clients - 1]);
+        }
+        free(name_clients[*num_clients - 1]);
+        (*num_clients)--;
+    }
+}
+
 void normalize_str(char *str)
 {
     char normalized_str[256];
@@ -93,7 +116,8 @@ int main()
     struct timeval tv;
 
     int client_sockets[FD_SETSIZE]; // Danh sách các client
-    int num_clients[FD_SETSIZE]; // Số lượng client hiện tại
+    char *name_clients[FD_SETSIZE]; // Danh sách tên của các client
+    int num_clients = 0; // Số lượng client hiện tại
 
     while (1)
     {
@@ -137,9 +161,9 @@ int main()
                         FD_SET(client, &fdread);
                         printf("New client connected: %d\n", client);
                         client_sockets[client] = client;
-                        num_clients[client] = client; 
+                        num_clients++; 
 
-                        char *msg;
+                        char msg[256];
                         sprintf(msg, "Dang co %d client ket noi den server\n", num_clients);
                         send(client, msg, strlen(msg), 0);
                     }
@@ -156,23 +180,31 @@ int main()
                         printf("Client %d disconnected\n", client);
 
                         //Xoa client khoi danh sach
-                        for(int j = 0; j < num_clients; j++)
-                        {
-                            if(client_sockets[j] == client)
-                            {
-                                for(int k = j; k < num_clients - 1; k++)
-                                {
-                                    client_sockets[k] = client_sockets[k+1];
-                                }
-                                num_clients--;
-                                break;
-                            }
-                        }
+                        remove_client(client, client_sockets, name_clients, &num_clients);
+                        continue;
                     }
                     else
                     {
+
                         buf[ret] = 0;
                         printf("Received data from %d: %s\n", client, buf);
+
+                        if(strncmp( buf, "exit", 4) == 0){
+                            char msg[256];
+                            sprintf(msg, "Goodbye %s\n", name_clients[client]);
+                            send(client, msg, strlen(msg), 0);
+                            close(client);
+                            FD_CLR(client, &fdread); // Xoá socket ra khỏi tập sự kiện 
+                            printf("Client %d disconnected\n", client);
+
+                            //Xoa client khoi danh sach
+                            remove_client(client, client_sockets, name_clients, &num_clients);
+                            continue;
+                        }
+
+                        // Chuẩn hóa chuỗi
+                        normalize_str(buf);
+                        send(client, buf, strlen(buf), 0);
                     }
                 }
             }
