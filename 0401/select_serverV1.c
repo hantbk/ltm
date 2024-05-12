@@ -42,8 +42,7 @@ int main()
     int clients[FD_SETSIZE];
     int numClients = 0;
     struct timeval tv;
-
-    int maxdp;
+    int maxdp; 
     char buf[256];
 
     while (1)
@@ -62,7 +61,7 @@ int main()
                 maxdp = clients[i];
         }
 
-        //Thiết lập thời gian chờ
+        // Thiết lập thời gian chờ
         tv.tv_sec = 5;
         tv.tv_usec = 0;
 
@@ -72,13 +71,13 @@ int main()
         {
             printf("select() failed.\n");
             break;
-        } 
+        }
         if (ret == 0)
         {
             printf("Timed out.\n");
             continue;
         }
-        
+
         // Kiểm tra nếu là sự kiện có yêu cầu kết nối
         if (FD_ISSET(listener, &fdread))
         {
@@ -94,7 +93,7 @@ int main()
                 clients[numClients] = client;
                 numClients++;
                 printf("New client connected: %d\n", client);
-            }            
+            }
         }
 
         // Kiểm tra sự kiện nhận dữ liệu của các socket client
@@ -118,13 +117,14 @@ int main()
                     i--;
 
                     continue;
-                } else
+                }
+                else
                 {
                     // Xu ly du lieu nhan duoc
                     buf[ret] = 0;
                     printf("Received from %d: %s\n", clients[i], buf);
                 }
-            } 
+            }
         }
     }
 

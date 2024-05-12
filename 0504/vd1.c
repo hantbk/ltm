@@ -3,7 +3,8 @@
 
 void *thread_proc(void *);
 
-int main() {
+int main()
+{
     pthread_t tid;
     int params[8];
 
@@ -16,7 +17,8 @@ int main() {
     getchar();
 }
 
-void *thread_proc(void *args){
+void *thread_proc(void *args)
+{
     /* CHILD THREAD JOB*/
     int param = *(int *)args;
     printf("Child Thread id = %lu, param = %d\n", pthread_self(), param);

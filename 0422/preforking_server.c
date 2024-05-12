@@ -45,7 +45,7 @@ int main()
     }
 
     char buf[1024];
-
+    // Tạo sẵn 8 tiến trình con
     for (int i = 0; i < 8; i++)
     {
         if (fork() == 0)

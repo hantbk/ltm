@@ -66,7 +66,7 @@ int main()
                 {
                     break;
                 }
-                buf[ret] = '\0';
+                buf[ret] = 0;
                 printf("Received: %s\n", buf);
             }
             // Dong socket ket noi o tien trinh con

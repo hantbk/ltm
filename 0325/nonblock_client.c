@@ -28,15 +28,16 @@ int main()
     unsigned long ul = 1;
     ioctl(client, FIONBIO, &ul);
 
-    //Chuyen STDIN sang che do bat dong bo
+    // Chuyen STDIN sang che do bat dong bo
     ioctl(STDIN_FILENO, FIONBIO, &ul);
 
     char buf[256];
     while (1)
     {
-        // Doc du lieu tu ban phim
+        // Doc du lieu tu ban phim gui len server
         // printf("Nhap chuoi ky tu: ");
-        if(fgets(buf, sizeof(buf), stdin) != NULL) {
+        if (fgets(buf, sizeof(buf), stdin) != NULL)
+        {
             send(client, buf, strlen(buf), 0);
             if (strncmp(buf, "exit", 4) == 0)
             {
@@ -49,21 +50,25 @@ int main()
         int ret = recv(client, buf, sizeof(buf), 0);
         if (ret != -1)
         {
-            if(ret <= 0)
+            if (ret <= 0)
                 break;
             buf[ret] = 0;
             printf("Server: %s\n", buf);
-        } else
+        }
+        else
         {
-            if(errno == EWOULDBLOCK) {
+            if (errno == EWOULDBLOCK)
+            {
                 // printf("Khong co du lieu\n");
+                // Lỗi do không có dữ liệu
+                // Do nothing
             }
-            else {
+            else
+            {
                 perror("recv() failed");
                 break;
             }
         }
-        
     }
 
     close(client);

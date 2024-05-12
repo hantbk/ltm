@@ -152,7 +152,6 @@ void *client_proc(void *arg)
         else
         {
             // Da dang nhap
-
             char receiver[32];
             sscanf(buf, "%s", receiver);
 

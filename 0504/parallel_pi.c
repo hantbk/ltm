@@ -11,28 +11,30 @@ double step;
 
 void *thread_proc(void *);
 
-int main() {
+int main()
+{
     double sum;
     step = 1.0 / num_steps;
-    
+
     pthread_t tids[NUM_THREADS];
     int params[NUM_THREADS];
 
     struct timespec start, stop;
     clock_gettime(CLOCK_REALTIME, &start);
 
-    for (int i = 0; i < NUM_THREADS; i++) {
+    for (int i = 0; i < NUM_THREADS; i++)
+    {
         params[i] = i;
         pthread_create(&tids[i], NULL, thread_proc, &params[i]);
-    } 
+    }
 
     for (int i = 0; i < NUM_THREADS; i++)
         pthread_join(tids[i], NULL);
-    
+
     sum = 0;
     for (int i = 0; i < NUM_THREADS; i++)
         sum += local_sum[i];
-    
+
     clock_gettime(CLOCK_REALTIME, &stop);
 
     double pi = sum * step;
@@ -44,10 +46,12 @@ int main() {
     return 0;
 }
 
-void *thread_proc(void *arg) {
+void *thread_proc(void *arg)
+{
     int idx = *(int *)arg;
     double x, csum = 0;
-    for (int i = idx; i < num_steps; i += NUM_THREADS) {
+    for (int i = idx; i < num_steps; i += NUM_THREADS)
+    {
         x = (i + 0.5) * step;
         csum += 4.0 / (1.0 + x * x);
     }

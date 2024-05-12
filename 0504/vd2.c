@@ -8,14 +8,10 @@ int sum = 0;
 
 int main()
 {
-
     pthread_t tid;
     pthread_create(&tid, NULL, thread_proc, NULL);
-
     printf("New thread created.\n");
-
     pthread_join(tid, NULL);
-
     printf("sum = %d", sum);
 }
 
@@ -26,7 +22,7 @@ void *thread_proc(void *args)
     for (int i = 1; i <= 10; i++)
     {
         sleep(1);
-        sum += i*i;
+        sum += i * i;
     }
     printf("Done.\n");
 }

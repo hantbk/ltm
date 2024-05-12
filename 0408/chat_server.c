@@ -70,6 +70,7 @@ int main()
     char buf[256];
     struct timeval tv;
 
+    // Danh sach cac client da dang nhap
     int client_sockets[FD_SETSIZE];
     char *name_clients[FD_SETSIZE];
     int num_clients = 0;
@@ -187,7 +188,6 @@ int main()
                         else
                         {
                             // Da dang nhap
-
                             char receiver[32];
                             sscanf(buf, "%s", receiver);
 

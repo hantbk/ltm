@@ -85,20 +85,20 @@ int main()
                     }
                     else // Chưa vượt quá số kết nối tối đa
                     {
-                        // Thêm socket vào tập sự kiện 
+                        // Thêm socket vào tập sự kiện
                         FD_SET(client, &fdread);
                         printf("New client connected: %d\n", client);
                     }
                 }
-                else 
+                else
                 {
-                    // Socket client có sự kiện nhận dữ liệu 
+                    // Socket client có sự kiện nhận dữ liệu
                     int client = i;
                     int ret = recv(client, buf, sizeof(buf), 0);
                     if (ret <= 0)
                     {
                         close(client);
-                        FD_CLR(client, &fdread); // Xoá socket ra khỏi tập sự kiện 
+                        FD_CLR(client, &fdread); // Xoá socket ra khỏi tập sự kiện
                         printf("Client %d disconnected\n", client);
                     }
                     else

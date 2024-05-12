@@ -74,7 +74,7 @@ int main()
             // Tien trinh con, nhan du lieu tu client
             // Dong socket ket noi o tien trinh con
             close(listener);
-            
+
             while (1)
             {
                 char buf[256];
@@ -92,23 +92,33 @@ int main()
                 {
                     if (strcmp(format, "dd/mm/yyyy") == 0)
                     {
-                        strftime(buf, sizeof(buf), "%d/%m/%Y", timeinfo);
+                        // strftime(buf, sizeof(buf), "%d/%m/%Y", timeinfo);
+                        sprintf(buf, "%02d/%02d/%04d", timeinfo->tm_mday, timeinfo->tm_mon + 1, timeinfo->tm_year + 1900);
+                        send(client, buf, strlen(buf), 0);
                     }
                     else if (strcmp(format, "dd/mm/yy") == 0)
                     {
-                        strftime(buf, sizeof(buf), "%d/%m/%y", timeinfo);
+                        // strftime(buf, sizeof(buf), "%d/%m/%y", timeinfo);
+                        sprintf(buf, "%02d/%02d/%02d", timeinfo->tm_mday, timeinfo->tm_mon + 1, timeinfo->tm_year % 100);
+                        send(client, buf, strlen(buf), 0);
                     }
                     else if (strcmp(format, "mm/dd/yyyy") == 0)
                     {
-                        strftime(buf, sizeof(buf), "%m/%d/%Y", timeinfo);
+                        // strftime(buf, sizeof(buf), "%m/%d/%Y", timeinfo);
+                        sprintf(buf, "%02d/%02d/%04d", timeinfo->tm_mon + 1, timeinfo->tm_mday, timeinfo->tm_year + 1900);
+                        send(client, buf, strlen(buf), 0);
                     }
                     else if (strcmp(format, "mm/dd/yy") == 0)
                     {
-                        strftime(buf, sizeof(buf), "%m/%d/%y", timeinfo);
+                        // strftime(buf, sizeof(buf), "%m/%d/%y", timeinfo);
+                        sprintf(buf, "%02d/%02d/%02d", timeinfo->tm_mon + 1, timeinfo->tm_mday, timeinfo->tm_year % 100);
+                        send(client, buf, strlen(buf), 0);
                     }
                     else if (strcmp(format, "YYYY-MM-DD") == 0)
                     {
-                        strftime(buf, sizeof(buf), "%Y-%m-%d", timeinfo);
+                        // strftime(buf, sizeof(buf), "%Y-%m-%d", timeinfo);
+                        sprintf(buf, "%04d-%02d-%02d", timeinfo->tm_year + 1900, timeinfo->tm_mon + 1, timeinfo->tm_mday);
+                        send(client, buf, strlen(buf), 0);
                     }
                     else
                     {
@@ -123,7 +133,6 @@ int main()
                 buf[strlen(buf)] = '\0';
                 // Gui thoi gian hien tai ve client
                 send(client, buf, strlen(buf), 0);
-
             }
             // Dong socket ket noi o tien trinh con
             exit(0);

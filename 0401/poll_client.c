@@ -28,15 +28,15 @@ int main()
     struct pollfd fds[2];
     fds[0].fd = STDIN_FILENO; // Mô tả của thiết bị nhập dữ liệu
     fds[0].events = POLLIN;
-    fds[1].fd = client; // Mô tả của socket client 
-    fds[1].events = POLLIN; 
+    fds[1].fd = client; // Mô tả của socket client
+    fds[1].events = POLLIN;
 
     char buf[256];
 
     while (1)
     {
         int ret = poll(fds, 2, -1);
-        // Nếu có dữ liệu từ bàn phím 
+        // Nếu có dữ liệu từ bàn phím
         if (fds[0].revents & POLLIN)
         {
             fgets(buf, sizeof(buf), stdin);

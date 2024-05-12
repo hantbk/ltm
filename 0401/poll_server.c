@@ -44,8 +44,8 @@ int main()
     int nfds = 0;
 
     // Gan socket listener vao tap tham do
-    fds[0].fd = listener;
-    fds[0].events = POLLIN;
+    fds[0].fd = listener;   // Mô tả của socket listener
+    fds[0].events = POLLIN; // Thăm dò sự kiện POLLIN
     nfds++;
 
     char buf[256];
@@ -73,29 +73,47 @@ int main()
                     {
                         // Vượt quá số lượng tối đa
                         close(client);
-                    } else
+                    }
+                    else
                     {
                         // Thêm vào mảng thăm dò sự kiện
                         fds[nfds].fd = client;
                         fds[nfds].events = POLLIN;
                         nfds++;
 
-                        printf("New client connected: %d\n", client);   
+                        printf("New client connected: %d\n", client);
                     }
-                } else
+                }
+                else
                 {
-                    // Có dữ liệu từ client truyền đến 
+                    // Có dữ liệu từ client truyền đến
                     int client = fds[i].fd;
                     ret = recv(client, buf, sizeof(buf), 0);
                     if (ret <= 0)
                     {
                         // Ket noi bi dong => Xoa khoi mang
-                    } else
+                        close(client);
+                        for (int j = i; j < nfds - 1; j++)
+                        {
+                            fds[j] = fds[j + 1];
+                        }
+                        nfds--;
+                    }
+                    else
                     {
                         // Xử lý dữ liệu nhận được
                         buf[ret] = 0;
                         printf("Received from %d: %s\n", client, buf);
-                    }   
+
+                        // Chuyển dữ liệu nhận được cho tất cả client khác
+                        for (int j = 1; j < nfds; j++)
+                        {
+                            if (fds[j].fd != listener && fds[j].fd != client)
+                            {
+                                send(fds[j].fd, buf, strlen(buf), 0);
+                            }
+                        }
+                    }
                 }
             }
         }
