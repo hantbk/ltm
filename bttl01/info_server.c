@@ -33,10 +33,7 @@ int main()
         return 1;
     }
 
-    struct sockaddr_in clientAddr;
-    int clientAddrLen = sizeof(clientAddr);
-
-    int client = accept(listener, (struct sockaddr *)&clientAddr, &clientAddrLen);
+    int client = accept(listener, NULL, NULL);
     if (client == -1)
     {
         perror("accept() failed");
@@ -47,31 +44,28 @@ int main()
     // Truyen nhan du lieu
     char buf[256];
     int ret = recv(client, buf, sizeof(buf), 0);
-    
     buf[ret] = 0;
 
-    int pos = 0;
+    printf("%d bytes received\n", ret);
 
-    // Tach du lieu tu buffer
+    int pos = 0;
     char computer_name[64];
     strcpy(computer_name, buf);
-    pos += strlen(computer_name) + 1;
+    pos = strlen(computer_name) + 1;
 
-    printf("Computer name: %s\n", computer_name);
+    printf("Computer name: %s\n", computer_name);   
 
     int num_drives = (ret - pos) / 3;
+
     for (int i = 0; i < num_drives; i++)
     {
-        char drive_letter;
-        short int drive_size;
-
-        drive_letter = buf[pos];
+        char drive_letter = buf[pos];
         pos++;
-
+        unsigned short drive_size;
         memcpy(&drive_size, buf + pos, sizeof(drive_size));
         pos += sizeof(drive_size);
 
-        printf("%c: %hd\n", drive_letter, drive_size);
+        printf("%c - %hd\n", drive_letter, drive_size);
     }
 
     close(client);
