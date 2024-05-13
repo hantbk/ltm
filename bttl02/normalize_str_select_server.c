@@ -160,7 +160,7 @@ int main()
                         // Thêm socket vào tập sự kiện 
                         FD_SET(client, &fdread);
                         printf("New client connected: %d\n", client);
-                        client_sockets[client] = client;
+                        client_sockets[num_clients] = client;
                         num_clients++; 
 
                         char msg[256];
