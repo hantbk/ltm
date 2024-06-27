@@ -62,7 +62,7 @@ int main()
                     continue;
                 }
 
-                buf[ret] = '\0';
+                buf[ret] = 0;
                 printf("Received from %d: %s\n", client, buf);
                 send(client, buf, strlen(buf), 0);
 

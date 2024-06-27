@@ -70,6 +70,7 @@ int main()
                 printf("Received: %s\n", buf);
             }
             // Dong socket ket noi o tien trinh con
+            close(client);
             exit(0);
         }
 

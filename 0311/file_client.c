@@ -38,7 +38,7 @@ int main()
     send(client, &filesize, sizeof(filesize), 0);
 
     //Truyen noi dung file
-    fseek(f, 0, SEEK_SET);
+    fseek(f, 0, SEEK_SET); // Di chuyen con tro file ve dau file
     
     while (1)
     {
